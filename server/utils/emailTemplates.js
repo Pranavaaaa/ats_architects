@@ -50,6 +50,33 @@ export const EMAIL_TEMPLATES = {
       Best regards,
       HR Team
     `
+  },
+  INTERVIEW_ACCEPTED: {
+    subject: "Congratulations! Your Application Has Been Accepted",
+    body: `Dear {{candidateName}},
+
+We are pleased to inform you that your application for the position of {{position}} has been accepted. 
+
+We were impressed with your performance during the interview process and believe your skills and experience align well with what we're looking for.
+
+Our HR team will be in touch shortly with the next steps and additional details.
+
+Best regards,
+ATS Architects Team`
+  },
+
+  INTERVIEW_REJECTED: {
+    subject: "Update Regarding Your Application",
+    body: `Dear {{candidateName}},
+
+Thank you for your interest in the {{position}} position and for taking the time to interview with us.
+
+After careful consideration, we regret to inform you that we have decided to move forward with other candidates whose qualifications more closely match our current needs.
+
+We appreciate your interest in ATS Architects and wish you the best in your future endeavors.
+
+Best regards,
+ATS Architects Team`
   }
 };
 

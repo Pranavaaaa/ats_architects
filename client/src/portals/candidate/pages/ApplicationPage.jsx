@@ -91,23 +91,55 @@ const ApplicationPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header Section */}
-      <div className="relative flex items-center mb-8">
+      {/* Header */}
+            <div className="bg-white shadow sticky top-0 z-50">
+              <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => navigate(-1)}
+                    className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                    aria-label="Go back"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                  <img
+                    src={architectsLogo}
+                    alt="ATS Architects Logo"
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                  {/* <h1 className="text-2xl font-bold">Candidate History</h1> */}
+                </div>
+              </div>
+      {/* <div className="relative flex items-center mb-8"> */}
         {/* Left: Logo */}
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <img src={architectsLogo} alt="ARchitects Logo" className="h-10 w-auto" />
           <div>
             <h1 className="text-lg font-bold text-blue-600">ARchitects</h1>
             <p className="text-xs text-gray-600">ATS Streamlining System</p>
           </div>
-        </div>
+        </div> */}
   
         {/* Center Title */}
-        <div className="absolute inset-0 flex justify-center items-center">
+        {/* <div className="absolute inset-0 flex justify-center items-center">
           <h2 className="text-2xl font-bold text-black text-center">
             Apply: {job?.title}
           </h2>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
   
       {/* Main Two-Column Layout */}
       <div className="flex flex-col lg:flex-row gap-8">
@@ -230,6 +262,7 @@ const ApplicationPage = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 

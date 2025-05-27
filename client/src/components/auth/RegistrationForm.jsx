@@ -145,7 +145,6 @@ const RegistrationForm = () => {
               >
                 <option value="admin">Admin</option>
                 <option value="interviewer">Interviewer</option>
-                <option value="HR">HR</option>
               </select>
             </div>
           </div>

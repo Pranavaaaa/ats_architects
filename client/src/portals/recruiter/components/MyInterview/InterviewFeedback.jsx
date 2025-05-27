@@ -48,6 +48,7 @@ const InterviewFeedback = ({
       }));
 
       await onStatusChange(interview.applicationId, status);
+      toast.success(`Application ${status.toLowerCase()} and email sent successfully`);
       
     } catch (error) {
       console.error('Error updating status:', error);

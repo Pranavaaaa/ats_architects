@@ -23,7 +23,7 @@ const port = process.env.PORT ||4000 ;
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
+    origin: "http://localhost:5173", 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })

@@ -17,6 +17,7 @@ import {
   prepareInterviewFeedback,
   parseInterviewScores
 } from '../../../utils/myInterviewUtils';
+import { sendAcceptanceEmail, sendRejectionEmail } from '../../../services/emailService';
 // import toast from 'react-toastify';
 
 const MyInterviews = () => {
@@ -85,7 +86,18 @@ const MyInterviews = () => {
               : interview
           )
         );
-        toast.success(`Application ${newStatus.toLowerCase()} successfully`);
+
+        // Get the interview data for email
+        const interview = interviews.find(i => i.applicationId === applicationId);
+        
+        // Send appropriate email based on status
+        if (newStatus === 'ACCEPTED') {
+          await sendAcceptanceEmail(interview);
+          toast.success('Application accepted and email sent');
+        } else {
+          await sendRejectionEmail(interview);
+          toast.success('Application rejected and email sent');
+        }
       }
     } catch (error) {
       console.error('Error updating status:', error);

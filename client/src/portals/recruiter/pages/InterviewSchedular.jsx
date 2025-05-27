@@ -121,42 +121,36 @@ const InterviewScheduler = () => {
     try {
       setConfirmLoading(true);
       const schedules = formatScheduleForAPI(editableSchedule, jobPostingId);
+      console.log('Sending schedules:', schedules); // Debug log
+
       const response = await api.post('/interviews/schedule', { schedules });
       
-      if (sendEmail && response.data.success) {
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to schedule interviews');
+      }
+
+      if (sendEmail && response.data.schedules?.length > 0) {
         const emailDataArray = formatEmailData(response.data.schedules);
-        const result = await sendInterviewScheduledEmail(emailDataArray);
-        
-        if (result.results.some(r => r.status === "invalid email")) {
-          result.results
-            .filter(r => r.status === "invalid email")
-            .forEach(r => {
-              console.log("Invalid email address:", r.email);
-              toast.error(`Invalid email: ${r.email}`, {
-                duration: 5000,
-                position: 'top-right',
-              });
-            });
+        console.log('Email data array:', emailDataArray); // Debug log
+
+        if (emailDataArray.length === 0) {
+          throw new Error('No valid email data generated');
+        }
+
+        const emailResult = await sendInterviewScheduledEmail(emailDataArray);
+        console.log('Email send result:', emailResult); // Debug log
+
+        if (emailResult.success) {
+          toast.success('Interviews scheduled and emails sent successfully');
         } else {
-          toast.success('Interviews scheduled and emails sent successfully', {
-            duration: 5000,
-            position: 'top-right',
-          });
+          toast.warning('Interviews scheduled but some emails failed to send');
         }
       } else {
-        toast.success('Interviews scheduled successfully', {
-          duration: 5000,
-          position: 'top-right',
-        });
+        toast.success('Interviews scheduled successfully');
       }
-      
-      console.log('Interviews created:', response.data);
     } catch (error) {
-      console.error('Error saving interviews:', error);
-      toast.error('Failed to save interviews', {
-        duration: 5000,
-        position: 'top-right',
-      });
+      console.error('Error in handleConfirmSchedule:', error);
+      toast.error(error.message || 'Failed to schedule interviews');
     } finally {
       setConfirmLoading(false);
       setShowConfirmation(false);

@@ -28,7 +28,13 @@ export const sendThankYouEmail = async (emailData) => {
 }
 
 export const sendInterviewScheduledEmail = async (emailDataArray) => {
-  console.log("emailDataArray : ", emailDataArray);
+  if (!Array.isArray(emailDataArray) || emailDataArray.length === 0) {
+    console.error('Invalid email data array:', emailDataArray);
+    throw new Error('No valid email data provided');
+  }
+
+  console.log('Sending interview scheduled emails:', emailDataArray);
+
   const formattedData = emailDataArray.map(emailData => ({
     templateName: 'INTERVIEW_SCHEDULED',
     recipients: [{
@@ -36,6 +42,7 @@ export const sendInterviewScheduledEmail = async (emailDataArray) => {
       email: emailData.email
     }],
     variables: {
+      candidateName: emailData.candidateName,
       position: emailData.jobTitle,
       date: emailData.interviewDate,
       time: emailData.interviewTime,
@@ -44,26 +51,14 @@ export const sendInterviewScheduledEmail = async (emailDataArray) => {
     }
   }));
 
-  const res = await sendEmail(formattedData);
-  return res;
-
-  // sample data to send
-  // {
-  //   "templateName": "INTERVIEW_SCHEDULED",
-  //   "recipients": [
-  //     {
-  //       "name": "John Doe",
-  //       "email": "johndoe@example.com"
-  //     }
-  //   ],
-  //   "variables": {
-  //     "position": "Software Engineer",
-  //     "date": "December 26, 2024",
-  //     "time": "2:00 PM IST",
-  //     "meetingLink": "https://meet.google.com/abc-defg-hij",
-  //     "meetingId": "123 456 789"
-  //   }
-  // }
+  try {
+    const response = await sendEmail(formattedData);
+    console.log('Email send response:', response);
+    return response;
+  } catch (error) {
+    console.error('Error sending interview emails:', error);
+    throw error;
+  }
 }
 
 export const sendFinalStatusEmail = async (emailData) => {
@@ -94,6 +89,37 @@ export const sendFinalStatusEmail = async (emailData) => {
   // }
 }
 
+export const sendAcceptanceEmail = async (candidateData) => {
+  const formData = [{
+    templateName: 'INTERVIEW_ACCEPTED',
+    recipients: [{ 
+      name: candidateData.candidateName, 
+      email: candidateData.candidateEmail
+    }],
+    variables: {
+      position: candidateData.jobTitle,
+      candidateName: candidateData.candidateName
+    }
+  }];
+
+  return await sendEmail(formData);
+};
+
+export const sendRejectionEmail = async (candidateData) => {
+  const formData = [{
+    templateName: 'INTERVIEW_REJECTED',
+    recipients: [{ 
+      name: candidateData.candidateName, 
+      email: candidateData.candidateEmail
+    }],
+    variables: {
+      position: candidateData.jobTitle,
+      candidateName: candidateData.candidateName
+    }
+  }];
+
+  return await sendEmail(formData);
+};
 
 export const sendEmail = async (formData) => {
   try {

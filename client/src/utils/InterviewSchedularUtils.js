@@ -32,41 +32,53 @@ export const formatScheduleForAPI = (editableSchedule, jobPostingId) => {
 };
 
 export const formatEmailData = (schedules) => {
+  if (!Array.isArray(schedules) || schedules.length === 0) {
+    console.error('Invalid or empty schedules array:', schedules);
+    return [];
+  }
+
   return schedules.map(schedule => {
-    const formattedDate = new Date(schedule.interviewDate).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  
-    const [startHours, startMinutes, startSeconds] = schedule.interviewStartTime.split(':');
-    const startTime = new Date();
-    startTime.setHours(startHours, startMinutes, startSeconds);
-    const formattedStartTime = startTime.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    });
-  
-    const [endHours, endMinutes, endSeconds] = schedule.interviewEndTime.split(':');
-    const endTime = new Date();
-    endTime.setHours(endHours, endMinutes, endSeconds);
-    const formattedEndTime = endTime.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    });
-  
-    const formattedTimeRange = `${formattedStartTime} to ${formattedEndTime}`;
-  
-    return {
-      candidateName: schedule.candidateName,
-      email: schedule.candidateEmail,
-      jobTitle: schedule.jobTitle,
-      interviewDate: formattedDate,
-      interviewTime: formattedTimeRange,
-      meetingLink: schedule.joinUrl,
-      meetingId: schedule.meetingId,
-    };
-  });
+    try {
+      // Log incoming schedule data
+      console.log('Processing schedule:', schedule);
+
+      const interviewDate = new Date(schedule.interviewDate || schedule.startDateTime);
+      const formattedDate = interviewDate.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Handle start time
+      const startTime = new Date(schedule.startDateTime);
+      const formattedStartTime = startTime.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+
+      // Handle end time
+      const endTime = new Date(schedule.endDateTime);
+      const formattedEndTime = endTime.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+
+      const formattedTimeRange = `${formattedStartTime} to ${formattedEndTime}`;
+
+      return {
+        candidateName: schedule.candidateName || 'Candidate',
+        email: schedule.candidateEmail || schedule.email,
+        jobTitle: schedule.jobTitle || 'Interview',
+        interviewDate: formattedDate,
+        interviewTime: formattedTimeRange,
+        meetingLink: schedule.joinUrl || schedule.meetingLink,
+        meetingId: schedule.meetingId
+      };
+    } catch (error) {
+      console.error('Error formatting schedule:', error, schedule);
+      return null;
+    }
+  }).filter(Boolean); // Remove any null entries
 };
