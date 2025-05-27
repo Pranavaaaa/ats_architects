@@ -4,8 +4,6 @@ export const fetchInterviewsByInterviewerId = async (req, res) => {
   try {
     const { interviewerId } = req.params;
 
-    console.log("interviewid: ", interviewerId);
-
     const query = `
         SELECT 
           i."interviewId",
@@ -213,9 +211,6 @@ JOIN "jobPostings" j ON i."jobPostingId" = j."jobPostingId"`;
     }
 
     await client.query("COMMIT");
-
-    console.log("Saved interviews:", savedInterviews);
-    console.log("Duplicate interviews:", duplicates);
 
     res.status(201).json({
       success: true,

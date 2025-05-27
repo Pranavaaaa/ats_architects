@@ -102,7 +102,6 @@ function isValidFileType(mimeType) {
           const isJobRelated = await isJobEmail(subject, emailContent);
   
           if (!isJobRelated) {
-            console.log(`Skipping non-job email: ${subject}`);
             skippedCount++;
             continue;
           }
@@ -111,7 +110,6 @@ function isValidFileType(mimeType) {
           const attachmentPart = findAttachmentPart(fullMessage.data.payload);
   
           if (!attachmentPart) {
-            console.log(`No valid resume attachment found in email: ${subject}`);
             skippedCount++;
             continue;
           }
@@ -123,10 +121,8 @@ function isValidFileType(mimeType) {
               id: attachmentPart.body.attachmentId,
             });
 
-            // console.log("attachment :", attachment.data.data);
   
             if (!attachment.data.data) {
-              console.log(`Failed to get attachment data for email: ${subject}`);
               skippedCount++;
               continue;
             }
@@ -137,18 +133,14 @@ function isValidFileType(mimeType) {
             // If the attachment is a PDF, extract text from it
             const resumeContent = await extractTextFromPdf(resumeBuffer);
             if (!resumeContent) {
-              console.log(`Failed to extract text from PDF for email: ${subject}`);
               skippedCount++;
               continue;
             }
             
-            console.log("resume content: ", resumeContent);
             // Validate if it's actually a resume
             const isValidResume = await analyzeResume(resumeContent);
-            console.log("isValidResume: ", isValidResume);
   
             if (!isValidResume) {
-              console.log(`Invalid resume attachment in email: ${subject}`);
               skippedCount++;
               continue;
             }
@@ -156,31 +148,22 @@ function isValidFileType(mimeType) {
   
             // Extract job position from email
             const jobPosition = await extractJobDetails(subject, emailContent);
-            console.log("jobPosition: ", jobPosition);
             if (!jobPosition) {
-              console.log(`Could not extract job position from email: ${subject}`);
               skippedCount++;
               continue;
             }
   
             // Find matching job posting
             const matchingJobs = await findMatchingJobs(jobPosition);
-            
-            console.log("matchingJobs: ", matchingJobs);
+
             if (!matchingJobs || matchingJobs.length === 0) {
-              console.log(`No matching jobs found for position: ${jobPosition}`);
               skippedCount++;
               continue;
             }
   
             // Extract candidate information from resume
             const candidateInfo = await analyzeResume(resumeContent, true);
-  
-            console.log("candidateInfo: ", candidateInfo);
             if (!candidateInfo || !candidateInfo.email) {
-              console.log(
-                `Failed to extract candidate info from resume in email: ${subject}`
-              );
               skippedCount++;
               continue;
             }
@@ -246,7 +229,6 @@ function isValidFileType(mimeType) {
                   removeLabelIds: ["UNREAD"],
                 },
               });
-              console.log(`Email marked as read: ${res.data.id}`);
             } catch (error) {
               console.error(`Failed to mark email as read: ${error.message}`);
             }

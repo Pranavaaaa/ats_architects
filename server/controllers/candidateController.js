@@ -47,8 +47,6 @@ export const getCandidates = async (req, res) => {
 
     const result = await pool.query(query);
     //processing...
-
-    console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
     console.error("Error in getCandidates:", error);

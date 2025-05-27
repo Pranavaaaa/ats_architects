@@ -39,7 +39,6 @@ export const getEmails = async (req, res) => {
 export const createMeeting = async (req, res) => {
   try {
     const { startDateTime, endDateTime, summary } = req.body;
-    console.log("data received: ", req.body);
     
     const { meetClient } = await getGoogleServices();
 
@@ -72,7 +71,6 @@ export const createMeeting = async (req, res) => {
 export const processEmails = async (req, res) => {
   try {
     const result = await processIncomingEmail();
-    console.log("res :", result);
     
     res.status(200).json(result);
   } catch (error) {
@@ -88,7 +86,6 @@ export const sendEmails = async (req, res) => {
   try {
     const emailData = req.body; // Array of dictionaries
     const { gmail } = await getGoogleServices();
-    console.log("emailData: ", emailData);
 
     const results = await Promise.all(emailData.map(async data => {
       const { recipients, templateName, variables } = data;

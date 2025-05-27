@@ -27,8 +27,6 @@ export const register = async (req, res) => {
     const newUserResult = await pool.query(insertUserQuery, [firstName, lastName, email, hashedPassword, role]);
     const newUser = newUserResult.rows[0];
 
-    console.log("new user: ", newUser);
-
     // Generate JWT token
     const token = authService.generateToken(newUser);
 
@@ -44,13 +42,10 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-
-    console.log("reached to login, ", email, password);
     // Find user by email
     const userQuery = 'SELECT * FROM users WHERE email = $1';
     const userResult = await pool.query(userQuery, [email]);
     const user = userResult.rows[0];
-    console.log("user: ", user);
 
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
