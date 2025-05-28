@@ -39,6 +39,7 @@ const InterviewFeedback = ({
     accept: false,
     reject: false
   });
+  const [loading, setLoading] = useState(false);
 
   const handleStatusChange = async (status) => {
     try {
@@ -102,8 +103,7 @@ const InterviewFeedback = ({
     const cumulativeScore = scores.length > 0 
       ? Number((scores.reduce((sum, score) => sum + score, 0) / scores.length).toFixed(2))
       : 0;
-    
-    console.log('Updated ratings:', updatedRatings); // Debug log
+
     onRatingChange(key, value);
     onRatingChange('cumulativeScore', cumulativeScore);
   };
@@ -199,7 +199,7 @@ const InterviewFeedback = ({
               onClick={() => handleStatusChange('ACCEPTED')}
               variant="success"
               disabled={statusLoading.accept || statusLoading.reject || interview.status === 'ACCEPTED'}
-              loading={statusLoading.accept}
+              loading={loading}
               loadingText="Accepting..."
               className="bg-green-600 hover:bg-green-700 text-white min-w-[100px]"
             >
@@ -209,7 +209,7 @@ const InterviewFeedback = ({
               onClick={() => handleStatusChange('REJECTED')}
               variant="danger"
               disabled={statusLoading.accept || statusLoading.reject || interview.status === 'REJECTED'}
-              loading={statusLoading.reject}
+              loading={loading}
               loadingText="Rejecting..."
               className="bg-red-600 hover:bg-red-700 text-white min-w-[100px]"
             >

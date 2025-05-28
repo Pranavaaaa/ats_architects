@@ -65,7 +65,6 @@ const ApplicationsPage = () => {
         setLoading(true);
         const response = await api.get(`/applications/${jobId}`);
         if (isMounted) {
-          console.log("resp ", response.data);
           setApplications(response.data.applications);
           setError(null);
         }
@@ -183,6 +182,23 @@ const ApplicationsPage = () => {
     navigate("/recruiter/interview-schedular", {
       state: { selectedApplications: selectedIds, jobPostingId: jobId },
     });
+  };
+
+  // Add this status styling function at the top of your component
+  const getStatusStyle = (status) => {
+    const baseStyle = "px-2 py-1 rounded-full text-xs font-medium";
+    switch (status) {
+      case 'PENDING':
+        return `${baseStyle} bg-yellow-100 text-yellow-800`;
+      case 'ACCEPTED':
+        return `${baseStyle} bg-green-100 text-green-800`;
+      case 'REJECTED':
+        return `${baseStyle} bg-red-100 text-red-800`;
+      case 'SCHEDULED':
+        return `${baseStyle} bg-blue-100 text-blue-800`;
+      default:
+        return `${baseStyle} bg-gray-100 text-gray-800`;
+    }
   };
 
   if (loading) return <Loading size="lg" text="Loading Applications..." />;
@@ -352,6 +368,9 @@ const ApplicationsPage = () => {
                   Application Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Application Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Resume Score
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -365,17 +384,12 @@ const ApplicationsPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
-                      checked={
-                        selectedCandidates[application.applicationId] || false
-                      }
-                      onChange={() =>
-                        toggleCandidateSelection(application.applicationId)
-                      }
+                      checked={selectedCandidates[application.applicationId] || false}
+                      onChange={() => toggleCandidateSelection(application.applicationId)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /> 
-                    <span className="ml-2   text-sm text-gray-500">
-
-                    {index + 1}
+                    <span className="ml-2 text-sm text-gray-500">
+                      {index + 1}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -396,11 +410,17 @@ const ApplicationsPage = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-500">
+                      <span className={getStatusStyle(application.applicationStatus)}>
+                        {application.applicationStatus}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {application.resumeScore}
                     </div>
                   </td>
-
                   <td className="px-6 py-4 whitespace-nowrap">
                     <ResumeViewer resume={application.resume} />
                   </td>

@@ -12,10 +12,11 @@ export const getApplicationsByJobId = async (req, res) => {
         a."resumeScore",
         c."firstName",
         c."lastName",
-        c."email"
+        c."email",
+        a."applicationStatus"
       FROM applications a
       JOIN candidates c ON a."candidateId" = c."candidateId"
-      WHERE a."jobPostingId" = $1
+      WHERE a."jobPostingId" = $1 AND a."applicationStatus" = 'PENDING'
       ORDER BY a."resumeScore" DESC NULLS LAST;
     `;
 
@@ -29,6 +30,7 @@ export const getApplicationsByJobId = async (req, res) => {
       email: app.email,
       applicationDate: app.applicationDate.toISOString(),
       resumeScore: app.resumeScore,
+      applicationStatus: app.applicationStatus,
       resume: app.resume, // BLOB data
     }));
 

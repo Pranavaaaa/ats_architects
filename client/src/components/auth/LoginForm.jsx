@@ -22,7 +22,6 @@ const LoginForm = () => {
     try {
       const response = await loginService(email, password);
 
-      console.log("response in loginform: ", response);
       await login(response.user);
       navigate("/recruiter/dashboard");
     } catch (err) {
