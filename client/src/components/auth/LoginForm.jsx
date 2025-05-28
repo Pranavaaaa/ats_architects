@@ -21,7 +21,6 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const response = await loginService(email, password);
-
       await login(response.user);
       navigate("/recruiter/dashboard");
     } catch (err) {
