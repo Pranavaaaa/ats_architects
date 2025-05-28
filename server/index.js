@@ -23,7 +23,7 @@ const port = process.env.PORT ||4000 ;
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", 
+    origin: "https://ats-architects-frontend.onrender.com", 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
