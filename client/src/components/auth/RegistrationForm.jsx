@@ -52,6 +52,7 @@ const RegistrationForm = () => {
     }
 
     try {
+      console.log('Submitting registration:', formData);
       await register(formData);
       navigate('/login');
     } catch (err) {

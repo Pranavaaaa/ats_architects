@@ -30,7 +30,7 @@ export const register = async (req, res) => {
     // Generate JWT token
     const token = authService.generateToken(newUser);
 
-    return res.status(201).json({ message: 'User created successfully', token, user: newUser });
+    return res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
