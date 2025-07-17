@@ -14,7 +14,6 @@ import googleRoutes from "./routes/googleRoutes.js";
 dotenv.config();
 
 
-// Suppress deprecation warnings
 process.env.NODE_NO_WARNINGS = '1';
 
 const app = express();
